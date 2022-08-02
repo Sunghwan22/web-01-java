@@ -10,4 +10,8 @@ public class Task {
   public String content() {
     return content;
   }
+
+  public String toCsvRow() {
+    return content;
+  }
 }

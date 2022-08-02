@@ -5,17 +5,18 @@
 
 import com.sun.net.httpserver.HttpServer;
 import models.Task;
+import utils.FormParser;
 import utils.MessageWriter;
 import utils.RequestBodyReader;
 import utils.TaskLoader;
 import utils.TodoListPageGenerator;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.List;
 
 public class TodoList {
-
   private final TaskLoader taskLoader;
   private final List<Task> tasks;
 
@@ -24,24 +25,28 @@ public class TodoList {
     application.run();
   }
 
-  public TodoList() {
+  public TodoList() throws FileNotFoundException {
     taskLoader = new TaskLoader();
     tasks = taskLoader.loadTask();
   }
 
   private void run() throws IOException {
     InetSocketAddress address = new InetSocketAddress(8000);
-
     HttpServer httpServer = HttpServer.create(address, 0);
 
     httpServer.createContext("/", exchange -> {
 
       String method = exchange.getRequestMethod();
 
-      String taskContent = new RequestBodyReader(exchange).body();
+      String requestBody = new RequestBodyReader(exchange).body();
 
       if(method.equals("POST")) {
+        FormParser formParser = new FormParser();
+        String taskContent = formParser.parse(requestBody);
+
         tasks.add(new Task(taskContent));
+
+        taskLoader.writeTask(tasks);
       }
 
       TodoListPageGenerator todoListPageGenerator = new TodoListPageGenerator(tasks);
@@ -52,6 +57,6 @@ public class TodoList {
     });
 
     httpServer.start();
-    System.out.println("http://localhost:8000/");
+    System.out.println("http://localhost:8000");
   }
 }
