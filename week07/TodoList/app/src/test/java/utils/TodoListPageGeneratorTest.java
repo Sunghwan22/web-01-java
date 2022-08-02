@@ -33,6 +33,9 @@ class TodoListPageGeneratorTest {
 
     TodoListPageGenerator todoListPageGenerator = new TodoListPageGenerator(tasks);
 
+    String html = todoListPageGenerator.html();
 
+    assertTrue(html.contains("티아이엘 쓰기"), "할 일 목록 문제" + html);
+    assertTrue(html.contains("주말에 개같이 공부하기"), "할 일 목록 문제" + html);
   }
 }
