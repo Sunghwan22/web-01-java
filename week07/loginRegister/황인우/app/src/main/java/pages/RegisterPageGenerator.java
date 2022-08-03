@@ -4,7 +4,7 @@ public class RegisterPageGenerator extends PageGenerator {
   @Override
   public String content() {
     return "<h2>회원가입</h2>\n" +
-        "<form method=\"POST\" accept-charset=\"UTF-8\">\n" +
+        "<form method=\"POST\" enctype=\"text/plain\">\n" +
         "<p>\n" +
         "<label>이름 </label>\n" +
         "<input type=\"text\" name=\"name\" />\n" +
