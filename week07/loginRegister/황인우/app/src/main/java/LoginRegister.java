@@ -1,10 +1,13 @@
 import com.sun.net.httpserver.HttpServer;
 import pages.GreetingPageGenerator;
+import pages.LoginPageGenerator;
 import pages.PageGenerator;
+import pages.RegisterPageGenerator;
 import utils.MessageWriter;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.URI;
 
 public class LoginRegister {
   public static void main(String[] args) throws IOException {
@@ -17,7 +20,10 @@ public class LoginRegister {
     HttpServer httpServer = HttpServer.create(address, 0);
 
     httpServer.createContext("/", exchange -> {
-      PageGenerator pageGenerator = new GreetingPageGenerator();
+      URI uri = exchange.getRequestURI();
+      String path = uri.getPath();
+
+      PageGenerator pageGenerator = process(path);
       String html = pageGenerator.html();
 
       exchange.sendResponseHeaders(200, html.getBytes().length);
@@ -28,5 +34,13 @@ public class LoginRegister {
     httpServer.start();
 
     System.out.println("Server is listening... http://localhost:8000/");
+  }
+
+  public PageGenerator process(String path) {
+    return switch (path) {
+      case "/login" -> new LoginPageGenerator();
+      case "/register" -> new RegisterPageGenerator();
+      default -> new GreetingPageGenerator();
+    };
   }
 }
