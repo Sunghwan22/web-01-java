@@ -3,18 +3,14 @@ package utils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class FormParser {
-  public List<String> parse(String line) {
-    List<String> forms = new ArrayList<>();
-
-    Arrays.stream(line.split("&"))
+  public Map<String, String> parse(String line) {
+    return  Arrays.stream(line.split("&"))
         .map(pair -> pair.split("="))
         .filter(pair -> pair.length == 2)
-        .forEach(i -> {
-          forms.add(i[1]);
-        });
-
-    return forms;
+        .collect(Collectors.toMap(i -> i[0], i -> i[1]));
   }
 }
