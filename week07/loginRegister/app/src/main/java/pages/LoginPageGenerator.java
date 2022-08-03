@@ -10,7 +10,7 @@ public class LoginPageGenerator extends PageGenerator {
         "<p>비밀번호</p>\n" +
         "<input type=\"password\" name=\"password\" />\n " +
         "<p>\n" +
-        "<button type=\"submit\" name = \"login\">로그인</button>\n" +
+        "<button type=\"submit\">로그인</button>\n" +
         "</p>\n" +
         "</form>\n";
   }
