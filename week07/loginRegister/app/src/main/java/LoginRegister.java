@@ -137,7 +137,7 @@ public class LoginRegister {
         formData.get("password"),
         formData.get("email"));
 
-    accountRepository.accounts().put(account.id(), account);
+    accountRepository.accounts().put(account.id(),  account);
 
     return new SuccessRegisterPageGenerator();
   }
