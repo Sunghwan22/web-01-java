@@ -29,4 +29,8 @@ public class Account {
   public String email() {
     return email;
   }
+
+  public String toCsvRow() {
+    return name + "," + id + "," + password + "," + email;
+  }
 }

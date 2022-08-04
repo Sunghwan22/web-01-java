@@ -3,11 +3,13 @@ package repositories;
 import models.Account;
 import org.junit.jupiter.api.Test;
 
+import java.io.FileNotFoundException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class AccountRepositoryTest {
   @Test
-  void find() {
+  void find() throws FileNotFoundException {
     AccountRepository accountRepository = new AccountRepository();
 
     Account account = new Account("조성환","tidls45","1234","tidls45@");
@@ -16,5 +18,4 @@ class AccountRepositoryTest {
 
     assertEquals(account, accountRepository.find("tidls45"));
   }
-
 }

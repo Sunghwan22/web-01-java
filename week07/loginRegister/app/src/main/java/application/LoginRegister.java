@@ -1,10 +1,14 @@
+package application;
+
 import com.sun.net.httpserver.HttpServer;
 import models.Account;
 import pages.DuplicateIdPageGenerator;
 import pages.GreetingPageGenerator;
+import pages.IdNotFoundPageGenerator;
 import pages.LoginPageGenerator;
 import pages.LoginSuccessPageGenerator;
 import pages.NotEnteredInformationPageGenerator;
+import pages.NotEnteredLoginForm;
 import pages.PageGenerator;
 import pages.PasswordNotEqualsPageGenerator;
 import pages.RegisterPageGenerator;
@@ -16,11 +20,10 @@ import utils.FormParser;
 import utils.MessageWriter;
 import utils.RequestBodyReader;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class LoginRegister {
@@ -34,12 +37,12 @@ public class LoginRegister {
     application.run();
   }
 
-  public LoginRegister() {
-     accountRepository = new AccountRepository();
+  public LoginRegister() throws FileNotFoundException {
+    accountRepository = new AccountRepository();
 
-     formParser = new FormParser();
+    formParser = new FormParser();
 
-     accountLoader = new AccountLoader();
+    accountLoader = new AccountLoader();
   }
 
   private void run() throws IOException {
@@ -71,7 +74,7 @@ public class LoginRegister {
 
   private PageGenerator process(String path,
                                 String method,
-                                Map<String, String> formData) {
+                                Map<String, String> formData) throws IOException {
     return switch (path) {
       case "/login" -> processLogin(method, formData);
       case "/registration" -> processRegistraion(method, formData);
@@ -91,18 +94,33 @@ public class LoginRegister {
   }
 
   private PageGenerator processLoginPost(Map<String, String> formData) {
-    //Todo 어카운트에 있는 아이디와 중복 되는지 검사해야함
-//    if("비밀번호틀림") {
-//      return  new WrongPasswordPageGenerator();
-//    }
-//    if("아이디 틀림") {
-//      return  new IdNotFoundPageGenerator();
-//    }
+    Account account = accountRepository.find(formData.get("id"));
 
-    return new LoginSuccessPageGenerator();
+    if (isaBlankLoginForm(formData)) {
+      return new NotEnteredLoginForm();
+    }
+
+    if (account == null) {
+      return new IdNotFoundPageGenerator();
+    }
+
+    if (isConfirmPassword(formData, account)) {
+      return new WrongPasswordPageGenerator();
+    }
+    String name = account.name();
+    return new LoginSuccessPageGenerator(name);
   }
 
-  private PageGenerator processRegistraion(String method, Map<String, String> formData) {
+  private boolean isaBlankLoginForm(Map<String, String> formData) {
+    return formData.get("id") == null ||
+        formData.get("password") == null;
+  }
+
+  private boolean isConfirmPassword(Map<String, String> formData, Account account) {
+    return !account.password().equals(formData.get("password"));
+  }
+
+  private PageGenerator processRegistraion(String method, Map<String, String> formData) throws IOException {
     if (method.equals("GET")) {
       return processRegistraionGet();
     }
@@ -114,7 +132,7 @@ public class LoginRegister {
     return new RegisterPageGenerator();
   }
 
-  private PageGenerator processRegistraionPost(Map<String, String> formData) {
+  private PageGenerator processRegistraionPost(Map<String, String> formData) throws IOException {
     if (isaBlankInformation(formData)) {
       return new NotEnteredInformationPageGenerator();
     }
@@ -123,7 +141,7 @@ public class LoginRegister {
       return new PasswordNotEqualsPageGenerator();
     }
 
-    if(isDuplicatedId(formData)) {
+    if (isDuplicatedId(formData)) {
       return new DuplicateIdPageGenerator();
     }
 
@@ -133,17 +151,11 @@ public class LoginRegister {
         formData.get("password"),
         formData.get("email"));
 
-    accountRepository.accounts().put(account.id(),  account);
+    accountRepository.accounts().put(account.id(), account);
+
+    accountLoader.write(accountRepository.accounts());
 
     return new SuccessRegisterPageGenerator();
-  }
-
-  private boolean isDuplicatedId(Map<String, String> formData) {
-    return !(accountRepository.find(formData.get("id")) == null);
-  }
-
-  private boolean isPasswordcheck(Map<String, String> formData) {
-    return !formData.get("password").equals(formData.get("password-check"));
   }
 
   private boolean isaBlankInformation(Map<String, String> formData) {
@@ -152,5 +164,13 @@ public class LoginRegister {
         formData.get("password") == null ||
         formData.get("password-check") == null ||
         formData.get("email") == null;
+  }
+
+  private boolean isPasswordcheck(Map<String, String> formData) {
+    return !formData.get("password").equals(formData.get("password-check"));
+  }
+
+  private boolean isDuplicatedId(Map<String, String> formData) {
+    return !(accountRepository.find(formData.get("id")) == null);
   }
 }
