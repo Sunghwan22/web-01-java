@@ -1,16 +1,16 @@
 package models;
 
 public class Account {
-  private String name;
-  private String id;
-  private String password;
-  private String mail;
+  private final String name;
+  private final String id;
+  private final String password;
+  private final String email;
 
-  public Account(String name, String id, String password, String mail) {
+  public Account(String name, String id, String password, String email) {
     this.name = name;
     this.id = id;
     this.password = password;
-    this.mail = mail;
+    this.email = email;
   }
 
   public String name() {
@@ -25,7 +25,7 @@ public class Account {
     return password;
   }
 
-  public String mail() {
-    return mail;
+  public String email() {
+    return email;
   }
 }

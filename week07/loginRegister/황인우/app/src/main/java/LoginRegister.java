@@ -1,17 +1,17 @@
+import models.Account;
 import pages.RegistrationFailPageGenerator;
 import com.sun.net.httpserver.HttpServer;
-import models.Account;
 import pages.*;
+import repositories.AccountRepository;
 import utils.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
 public class LoginRegister {
-  private Map<String, Account> accounts = new HashMap<>();
+  private AccountRepository accountRepository;
 
   public static void main(String[] args) throws IOException {
     LoginRegister application = new LoginRegister();
@@ -19,11 +19,7 @@ public class LoginRegister {
   }
 
   public LoginRegister() {
-    accounts.putAll(Map.of(
-        "hsjkdss228", new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"),
-        "dhkddlsgn228", new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"),
-        "innu3368", new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com")
-    ));
+    accountRepository = new AccountRepository();
   }
 
   public void run() throws IOException {
@@ -57,29 +53,35 @@ public class LoginRegister {
   public PageGenerator process(
       String path, String method, Map<String, String> formData) {
     return switch (path) {
+      case "/register" -> processRegistration(method, formData);
       case "/login" -> processLogin(method, formData);
-      case "/register" -> processRegister(method, formData);
       default -> new GreetingPageGenerator();
     };
   }
 
-  public PageGenerator processRegister(String method, Map<String, String> formData) {
+  public PageGenerator processRegistration(String method, Map<String, String> formData) {
     if (method.equals("GET")) {
-      return processRegisterGet();
+      return processRegistrationGet();
     }
 
-    return processRegisterPost(formData);
+    return processRegistrationPost(formData);
   }
 
-  public PageGenerator processRegisterGet() {
-    return new RegisterPageGenerator();
+  public PageGenerator processRegistrationGet() {
+    return new RegistrationPageGenerator();
   }
 
-  public PageGenerator processRegisterPost(Map<String, String> formData) {
-    String status = new RegistrationFormChecker(accounts).check(formData);
+  public PageGenerator processRegistrationPost(Map<String, String> formData) {
+    String status = new RegistrationFormChecker(accountRepository).check(formData);
 
     if (status.equals(RegistrationFormChecker.ACCEPTED)) {
       // TODO: 회원가입 조건 검사를 완료했으니 진짜 처리 과정 작성 필요
+      accountRepository.addAccount(
+          new Account(
+              formData.get("name"),
+              formData.get("id"),
+              formData.get("password"),
+              formData.get("email")));
 
       return new RegistrationSuccessPageGenerator();
     }

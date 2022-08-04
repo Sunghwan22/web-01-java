@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class RegisterPageGeneratorTest {
+class RegistrationPageGeneratorTest {
   @Test
   void content() {
-    PageGenerator pageGenerator = new RegisterPageGenerator();
+    PageGenerator pageGenerator = new RegistrationPageGenerator();
 
     String content = pageGenerator.content();
 

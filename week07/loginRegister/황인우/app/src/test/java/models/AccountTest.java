@@ -12,6 +12,6 @@ class AccountTest {
     assertEquals("이름", account.name());
     assertEquals("아이디", account.id());
     assertEquals("abcd1234", account.password());
-    assertEquals("abcd@naver.com", account.mail());
+    assertEquals("abcd@naver.com", account.email());
   }
 }

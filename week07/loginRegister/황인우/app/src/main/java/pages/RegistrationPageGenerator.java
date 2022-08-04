@@ -1,6 +1,6 @@
 package pages;
 
-public class RegisterPageGenerator extends PageGenerator {
+public class RegistrationPageGenerator extends PageGenerator {
   @Override
   public String content() {
     return "<h2>회원가입</h2>\n" +
@@ -26,6 +26,6 @@ public class RegisterPageGenerator extends PageGenerator {
         "<input type=\"text\" name=\"email\" />\n" +
         "</p>\n" +
         "<button type=\"submit\">회원가입</button>\n" +
-        "</form>";
+        "</form>\n";
   }
 }
