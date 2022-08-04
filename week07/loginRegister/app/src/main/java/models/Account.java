@@ -13,4 +13,20 @@ public class Account {
     this.password = password;
     this.email = email;
   }
+
+  public String name() {
+    return name;
+  }
+
+  public String id() {
+    return id;
+  }
+
+  public String password() {
+    return password;
+  }
+
+  public String email() {
+    return email;
+  }
 }

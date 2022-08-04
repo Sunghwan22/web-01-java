@@ -1,11 +1,17 @@
 import com.sun.net.httpserver.HttpServer;
 import models.Account;
+import pages.DuplicateIdPageGenerator;
 import pages.GreetingPageGenerator;
 import pages.LoginPageGenerator;
 import pages.LoginSuccessPageGenerator;
+import pages.NotEnteredInformationPageGenerator;
 import pages.PageGenerator;
+import pages.PasswordNotEqualsPageGenerator;
 import pages.RegisterPageGenerator;
 import pages.SuccessRegisterPageGenerator;
+import pages.WrongPasswordPageGenerator;
+import repositories.AccountRepository;
+import utils.AccountLoader;
 import utils.FormParser;
 import utils.MessageWriter;
 import utils.RequestBodyReader;
@@ -18,7 +24,10 @@ import java.util.List;
 import java.util.Map;
 
 public class LoginRegister {
-  private final List<Account> accounts;
+
+  private final AccountRepository accountRepository;
+  private final AccountLoader accountLoader;
+  private final FormParser formParser;
 
   public static void main(String[] args) throws IOException {
     LoginRegister application = new LoginRegister();
@@ -26,7 +35,11 @@ public class LoginRegister {
   }
 
   public LoginRegister() {
-    accounts = new ArrayList<>();
+     accountRepository = new AccountRepository();
+
+     formParser = new FormParser();
+
+     accountLoader = new AccountLoader();
   }
 
   private void run() throws IOException {
@@ -43,11 +56,9 @@ public class LoginRegister {
       RequestBodyReader requestBodyReader = new RequestBodyReader(exchange);
       String requestBody = requestBodyReader.body();
 
-      FormParser formParser = new FormParser();
       Map<String, String> formData = formParser.parse(requestBody);
 
-
-      PageGenerator pageGenerator = process(path,method,formData);
+      PageGenerator pageGenerator = process(path, method, formData);
 
       String content = pageGenerator.html();
 
@@ -60,16 +71,16 @@ public class LoginRegister {
 
   private PageGenerator process(String path,
                                 String method,
-                                Map<String ,String> formData) {
+                                Map<String, String> formData) {
     return switch (path) {
-      case "/login" -> processLogin(method,formData);
-      case "/registration" -> processRegistraion(method,formData);
+      case "/login" -> processLogin(method, formData);
+      case "/registration" -> processRegistraion(method, formData);
       default -> new GreetingPageGenerator();
     };
   }
 
   private PageGenerator processLogin(String method, Map<String, String> formData) {
-    if(method.equals("GET")) {
+    if (method.equals("GET")) {
       return processLoginGet();
     }
     return processLoginPost(formData);
@@ -92,9 +103,10 @@ public class LoginRegister {
   }
 
   private PageGenerator processRegistraion(String method, Map<String, String> formData) {
-    if(method.equals("GET")) {
+    if (method.equals("GET")) {
       return processRegistraionGet();
     }
+
     return processRegistraionPost(formData);
   }
 
@@ -103,14 +115,30 @@ public class LoginRegister {
   }
 
   private PageGenerator processRegistraionPost(Map<String, String> formData) {
-    // todo 이미 등록되있는 계정인지 확인
-//    if("조건 검사 ") {
-//      return new DuplicateIdPageGenerator();
-//    }
-//    if("비밀번호 확인이 틀릴 때 ") {
-//      return  new PasswordNotEqualsPageGenerator();
-//    }
-    // 여기서 account가 생성이 되는데
+    if (formData.get("name") == null ||
+        formData.get("id") == null ||
+        formData.get("password") == null ||
+        formData.get("password-check") == null ||
+        formData.get("email") == null) {
+      return new NotEnteredInformationPageGenerator();
+    }
+
+    if (!formData.get("password").equals(formData.get("password-check"))) {
+      return new PasswordNotEqualsPageGenerator();
+    }
+
+    if(!(accountRepository.find(formData.get("id")) == null)) {
+      return new DuplicateIdPageGenerator();
+    }
+
+    Account account = new Account(
+        formData.get("name"),
+        formData.get("id"),
+        formData.get("password"),
+        formData.get("email"));
+
+    accountRepository.accounts().put(account.id(), account);
+
     return new SuccessRegisterPageGenerator();
   }
 }
