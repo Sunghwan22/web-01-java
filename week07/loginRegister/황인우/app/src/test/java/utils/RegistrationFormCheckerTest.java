@@ -1,5 +1,6 @@
 package utils;
 
+import models.Account;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import repositories.AccountRepository;
@@ -19,6 +20,13 @@ class RegistrationFormCheckerTest {
   @BeforeEach
   void initialize() {
     accountRepository = new AccountRepository();
+
+    accountRepository.addAccount(
+        new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
+    accountRepository.addAccount(
+        new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
+    accountRepository.addAccount(
+        new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
   }
 
   @Test

@@ -1,9 +1,18 @@
 package pages;
 
+import models.Account;
+
 public class LoginSuccessPageGenerator extends PageGenerator {
+  private Account account;
+
+  public LoginSuccessPageGenerator(Account account) {
+    super();
+    this.account = account;
+  }
+
   @Override
   public String content() {
-    // TODO: 로그인 성공 페이지 만들기 (계정 이름 필요)
-    return "";
+    return "<h2>마카오 뱅크</h2>\n" +
+        "<p>안녕하세요 " + account.name() + " 님, 행복을 적립하는 마카오뱅크입니다.</p>\n";
   }
 }

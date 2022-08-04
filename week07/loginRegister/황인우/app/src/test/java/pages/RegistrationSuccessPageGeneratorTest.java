@@ -5,9 +5,6 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RegistrationSuccessPageGeneratorTest {
-  // 회원 가입이 완료되었습니다
-  // 로그인하기 링크
-
   @Test
   void content() {
     PageGenerator pageGenerator = new RegistrationSuccessPageGenerator();

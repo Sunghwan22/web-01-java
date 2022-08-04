@@ -25,6 +25,10 @@ public abstract class PageGenerator {
         "label {\n" +
         "display: block;\n" +
         "}\n" +
+        ".notification {\n" +
+        "font-size: 2em;\n" +
+        "font-weight: bold;\n" +
+        "}\n" +
         "</style>\n";
   }
 

@@ -25,17 +25,17 @@ public class RegistrationFailPageGenerator extends PageGenerator {
   }
 
   public String insufficient() {
-    return "<h2>입력되지 않은 정보가 있습니다. 다시 확인해주세요.</h2>\n" +
+    return "<p class=\"notification\">입력되지 않은 정보가 있습니다. 다시 확인해주세요.</p>\n" +
         "<a href=\"register\">되돌아가기</a>\n";
   }
 
   public String alreadyExistingId() {
-    return "<h2>이미 등록된 아이디입니다.</h2>\n" +
+    return "<p class=\"notification\">이미 등록된 아이디입니다.</p>\n" +
         "<a href=\"register\">되돌아가기</a>\n";
   }
 
   public String notEqualToPasswordCheck() {
-    return "<h2>입력하신 비밀번호가 서로 일치하지 않습니다. 다시 확인해주세요.</h2>\n" +
+    return "<p class=\"notification\">입력하신 비밀번호가 서로 일치하지 않습니다. 다시 확인해주세요.</p>\n" +
         "<a href=\"register\">되돌아가기</a>\n";
   }
 }

@@ -10,6 +10,13 @@ class AccountRepositoryTest {
   void findAccount() {
     AccountRepository accountRepository = new AccountRepository();
 
+    accountRepository.addAccount(
+        new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
+    accountRepository.addAccount(
+        new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
+    accountRepository.addAccount(
+        new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
+
     Account account = accountRepository.findAccount("hsjkdss228");
 
     assertEquals("황인우", account.name());
@@ -21,6 +28,13 @@ class AccountRepositoryTest {
   @Test
   void addAccount() {
     AccountRepository accountRepository = new AccountRepository();
+
+    accountRepository.addAccount(
+        new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
+    accountRepository.addAccount(
+        new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
+    accountRepository.addAccount(
+        new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
 
     Account account = new Account(
         "솔저76", "soldier76", "ivegotyouinmysights", "sergeant@overwatch.com");

@@ -5,6 +5,7 @@ import pages.*;
 import repositories.AccountRepository;
 import utils.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
@@ -18,8 +19,18 @@ public class LoginRegister {
     application.run();
   }
 
-  public LoginRegister() {
-    accountRepository = new AccountRepository();
+  public LoginRegister() throws FileNotFoundException {
+    FileLoader fileLoader = new FileLoader();
+
+    accountRepository = fileLoader.loadData("data.csv");
+
+    Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+      try {
+        fileLoader.saveData("data.csv", accountRepository);
+      } catch (IOException exception) {
+        throw new RuntimeException(exception);
+      }
+    }));
   }
 
   public void run() throws IOException {
@@ -75,7 +86,6 @@ public class LoginRegister {
     String status = new RegistrationFormChecker(accountRepository).check(formData);
 
     if (status.equals(RegistrationFormChecker.ACCEPTED)) {
-      // TODO: 회원가입 조건 검사를 완료했으니 진짜 처리 과정 작성 필요
       accountRepository.addAccount(
           new Account(
               formData.get("name"),
@@ -102,18 +112,14 @@ public class LoginRegister {
   }
 
   public PageGenerator processLoginPost(Map<String, String> formData) {
-    //TODO: 로그인 조건 검사 필요
-    String status = new AccountValidityChecker().check(formData);
+    String status = new AccountValidityChecker(accountRepository).check(formData);
 
-    if (true) {
-      return new LoginSuccessPageGenerator();
+    if (status.equals(AccountValidityChecker.ACCEPTED)) {
+      Account found = accountRepository.findAccount(formData.get("id"));
+
+      return new LoginSuccessPageGenerator(found);
     }
 
-    if (false) {
-//      return new LoginWrongIdPageGenerator();
-    }
-
-//    return new LoginWrongPasswordPageGenerator();
-    return null;
+    return new LoginFailPageGenerator(status);
   }
 }
