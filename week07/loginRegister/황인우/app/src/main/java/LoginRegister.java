@@ -1,18 +1,17 @@
+import pages.RegistrationFailPageGenerator;
 import com.sun.net.httpserver.HttpServer;
+import models.Account;
 import pages.*;
-import utils.FormParser;
-import utils.MessageWriter;
-import utils.RegistrationFormChecker;
-import utils.RequestBodyReader;
+import utils.*;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URI;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 public class LoginRegister {
-  private RegistrationFormChecker registrationFormChecker;
+  private Map<String, Account> accounts = new HashMap<>();
 
   public static void main(String[] args) throws IOException {
     LoginRegister application = new LoginRegister();
@@ -20,7 +19,11 @@ public class LoginRegister {
   }
 
   public LoginRegister() {
-    registrationFormChecker = new RegistrationFormChecker();
+    accounts.putAll(Map.of(
+        "hsjkdss228", new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"),
+        "dhkddlsgn228", new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"),
+        "innu3368", new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com")
+    ));
   }
 
   public void run() throws IOException {
@@ -33,12 +36,8 @@ public class LoginRegister {
 
       String line = new RequestBodyReader(exchange).body();
 
-//      System.out.println(line);
-
       FormParser formParser = new FormParser();
       Map<String, String> formData = formParser.parse(line);
-
-//      System.out.println(formData);
 
       String method = exchange.getRequestMethod();
 
@@ -77,11 +76,15 @@ public class LoginRegister {
   }
 
   public PageGenerator processRegisterPost(Map<String, String> formData) {
-    // TODO: 회원가입 처리 과정 및 처리 페이지 작성 필요
-    String status = registrationFormChecker.check(formData);
+    String status = new RegistrationFormChecker(accounts).check(formData);
 
+    if (status.equals(RegistrationFormChecker.ACCEPTED)) {
+      // TODO: 회원가입 조건 검사를 완료했으니 진짜 처리 과정 작성 필요
 
-    return null;
+      return new RegistrationSuccessPageGenerator();
+    }
+
+    return new RegistrationFailPageGenerator(status);
   }
 
   public PageGenerator processLogin(String method, Map<String, String> formData) {
@@ -98,6 +101,7 @@ public class LoginRegister {
 
   public PageGenerator processLoginPost(Map<String, String> formData) {
     //TODO: 로그인 조건 검사 필요
+    String status = new AccountValidityChecker().check(formData);
 
     if (true) {
       return new LoginSuccessPageGenerator();
