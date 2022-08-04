@@ -115,19 +115,15 @@ public class LoginRegister {
   }
 
   private PageGenerator processRegistraionPost(Map<String, String> formData) {
-    if (formData.get("name") == null ||
-        formData.get("id") == null ||
-        formData.get("password") == null ||
-        formData.get("password-check") == null ||
-        formData.get("email") == null) {
+    if (isaBlankInformation(formData)) {
       return new NotEnteredInformationPageGenerator();
     }
 
-    if (!formData.get("password").equals(formData.get("password-check"))) {
+    if (isPasswordcheck(formData)) {
       return new PasswordNotEqualsPageGenerator();
     }
 
-    if(!(accountRepository.find(formData.get("id")) == null)) {
+    if(isDuplicatedId(formData)) {
       return new DuplicateIdPageGenerator();
     }
 
@@ -140,5 +136,21 @@ public class LoginRegister {
     accountRepository.accounts().put(account.id(),  account);
 
     return new SuccessRegisterPageGenerator();
+  }
+
+  private boolean isDuplicatedId(Map<String, String> formData) {
+    return !(accountRepository.find(formData.get("id")) == null);
+  }
+
+  private boolean isPasswordcheck(Map<String, String> formData) {
+    return !formData.get("password").equals(formData.get("password-check"));
+  }
+
+  private boolean isaBlankInformation(Map<String, String> formData) {
+    return formData.get("name") == null ||
+        formData.get("id") == null ||
+        formData.get("password") == null ||
+        formData.get("password-check") == null ||
+        formData.get("email") == null;
   }
 }
