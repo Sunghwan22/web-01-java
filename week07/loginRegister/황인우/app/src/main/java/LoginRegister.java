@@ -1,7 +1,8 @@
-import models.Account;
+import models.User;
 import com.sun.net.httpserver.HttpServer;
 import pages.*;
-import repositories.AccountRepository;
+import repositories.UserRepository;
+import services.FormCheckService;
 import utils.*;
 
 import java.io.FileNotFoundException;
@@ -11,7 +12,9 @@ import java.net.URI;
 import java.util.Map;
 
 public class LoginRegister {
-  private AccountRepository accountRepository;
+  private UserRepository userRepository;
+
+  private FormCheckService formCheckService;
 
   public static void main(String[] args) throws IOException {
     LoginRegister application = new LoginRegister();
@@ -21,15 +24,17 @@ public class LoginRegister {
   public LoginRegister() throws FileNotFoundException {
     FileLoader fileLoader = new FileLoader();
 
-    accountRepository = fileLoader.loadData("data.csv");
+    userRepository = fileLoader.loadData("data.csv");
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       try {
-        fileLoader.saveData("data.csv", accountRepository);
+        fileLoader.saveData("data.csv", userRepository);
       } catch (IOException exception) {
         throw new RuntimeException(exception);
       }
     }));
+
+    formCheckService = new FormCheckService(userRepository);
   }
 
   public void run() throws IOException {
@@ -82,11 +87,11 @@ public class LoginRegister {
   }
 
   public PageGenerator processRegistrationPost(Map<String, String> formData) {
-    String status = new RegistrationFormChecker(accountRepository).check(formData);
+    String status = formCheckService.checkRegistrationForm(formData);
 
     if (status.equals(RegistrationFormChecker.ACCEPTED)) {
-      accountRepository.addAccount(
-          new Account(
+      userRepository.addUser(
+          new User(
               formData.get("name"),
               formData.get("id"),
               formData.get("password"),
@@ -111,10 +116,10 @@ public class LoginRegister {
   }
 
   public PageGenerator processLoginPost(Map<String, String> formData) {
-    String status = new LoginFormChecker(accountRepository).check(formData);
+    String status = new LoginFormChecker(userRepository).check(formData);
 
     if (status.equals(LoginFormChecker.ACCEPTED)) {
-      Account found = accountRepository.findAccount(formData.get("id"));
+      User found = userRepository.findUser(formData.get("id"));
 
       return new LoginSuccessPageGenerator(found);
     }

@@ -1,12 +1,12 @@
 package models;
 
-public class Account {
+public class User {
   private final String name;
   private final String id;
   private final String password;
   private final String email;
 
-  public Account(String name, String id, String password, String email) {
+  public User(String name, String id, String password, String email) {
     this.name = name;
     this.id = id;
     this.password = password;

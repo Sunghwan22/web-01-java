@@ -1,9 +1,9 @@
 package utils;
 
-import models.Account;
+import models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repositories.AccountRepository;
+import repositories.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,24 +15,24 @@ class LoginFormCheckerTest {
   // - 모든 데이터를 입력하지 않았을 경우
   // - 사용자 아이디가 존재하지 않을 경우
   // - 비밂번호가 틀렸을 경우
-  private AccountRepository accountRepository;
+  private UserRepository userRepository;
 
   @BeforeEach
   void initialize() {
-    accountRepository = new AccountRepository();
+    userRepository = new UserRepository();
 
-    accountRepository.addAccount(
-        new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
-    accountRepository.addAccount(
-        new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
-    accountRepository.addAccount(
-        new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
+    userRepository.addUser(
+        new User("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
+    userRepository.addUser(
+        new User("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
+    userRepository.addUser(
+        new User("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
   }
 
   @Test
   void checkNormalForm() {
     LoginFormChecker loginFormChecker
-        = new LoginFormChecker(accountRepository);
+        = new LoginFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "hsjkdss228");
@@ -46,7 +46,7 @@ class LoginFormCheckerTest {
   @Test
   void checkEmptyIdForm() {
     LoginFormChecker loginFormChecker
-        = new LoginFormChecker(accountRepository);
+        = new LoginFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("password", "dlsdn12");
@@ -59,7 +59,7 @@ class LoginFormCheckerTest {
   @Test
   void checkEmptyPasswordForm() {
     LoginFormChecker loginFormChecker
-        = new LoginFormChecker(accountRepository);
+        = new LoginFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "hsjkdss228");
@@ -72,7 +72,7 @@ class LoginFormCheckerTest {
   @Test
   void notExistingId() {
     LoginFormChecker loginFormChecker
-        = new LoginFormChecker(accountRepository);
+        = new LoginFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "chikorita");
@@ -86,7 +86,7 @@ class LoginFormCheckerTest {
   @Test
   void incorrectPassword() {
     LoginFormChecker loginFormChecker
-        = new LoginFormChecker(accountRepository);
+        = new LoginFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "hsjkdss228");

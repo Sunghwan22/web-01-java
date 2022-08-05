@@ -1,20 +1,17 @@
 package pages;
 
-import models.Account;
+import models.User;
 import org.junit.jupiter.api.Test;
-import repositories.AccountRepository;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginSuccessPageGeneratorTest {
   @Test
   void content() {
-    AccountRepository accountRepository = new AccountRepository();
+    User user
+        = new User("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com");
 
-    Account account
-        = new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com");
-
-    PageGenerator pageGenerator = new LoginSuccessPageGenerator(account);
+    PageGenerator pageGenerator = new LoginSuccessPageGenerator(user);
 
     String content = pageGenerator.content();
 

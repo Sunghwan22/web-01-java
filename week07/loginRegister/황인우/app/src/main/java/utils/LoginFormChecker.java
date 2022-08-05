@@ -1,7 +1,7 @@
 package utils;
 
-import models.Account;
-import repositories.AccountRepository;
+import models.User;
+import repositories.UserRepository;
 
 import java.util.Map;
 
@@ -15,10 +15,10 @@ public class LoginFormChecker {
   public static final String ACCEPTED
       = "ACCEPTED";
 
-  private AccountRepository accountRepository;
+  private UserRepository userRepository;
 
-  public LoginFormChecker(AccountRepository accountRepository) {
-    this.accountRepository = accountRepository;
+  public LoginFormChecker(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   public String check(Map<String, String> formData) {
@@ -27,7 +27,7 @@ public class LoginFormChecker {
       return LoginFormChecker.INSUFFICIENT_LOGIN_INPUTS;
     }
 
-    Account found = accountRepository.findAccount(formData.get("id"));
+    User found = userRepository.findUser(formData.get("id"));
 
     if (found == null) {
       return LoginFormChecker.NOT_EXISTING_ID;

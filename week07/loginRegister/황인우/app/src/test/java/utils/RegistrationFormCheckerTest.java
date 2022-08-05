@@ -1,9 +1,9 @@
 package utils;
 
-import models.Account;
+import models.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import repositories.AccountRepository;
+import repositories.UserRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,24 +15,24 @@ class RegistrationFormCheckerTest {
   // - 모든 데이터를 입력하지 않았을 경우
   // - 사용자 아이디가 이미 존재할 경우
   // - 비밂번호와 비밀번호 재확인이 다를 경우
-  private AccountRepository accountRepository;
+  private UserRepository userRepository;
 
   @BeforeEach
   void initialize() {
-    accountRepository = new AccountRepository();
+    userRepository = new UserRepository();
 
-    accountRepository.addAccount(
-        new Account("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
-    accountRepository.addAccount(
-        new Account("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
-    accountRepository.addAccount(
-        new Account("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
+    userRepository.addUser(
+        new User("황인우", "hsjkdss228", "dlsdn12", "hsjkdss228@naver.com"));
+    userRepository.addUser(
+        new User("김인우", "dhkddlsgn228", "dlsdn12", "dhkddlsgn228@gmail.com"));
+    userRepository.addUser(
+        new User("이인우", "innu3368", "dlsdn12", "innu3368@instagram.com"));
   }
 
   @Test
   void checkNormalForm() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("name", "솔저76");
@@ -49,7 +49,7 @@ class RegistrationFormCheckerTest {
   @Test
   void checkEmptyNameForm() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "soldier76");
@@ -65,7 +65,7 @@ class RegistrationFormCheckerTest {
   @Test
   void checkEmptyPasswordForm() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("name", "솔저76");
@@ -81,7 +81,7 @@ class RegistrationFormCheckerTest {
   @Test
   void checkEmptyPasswordCheckForm() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("name", "솔저76");
@@ -97,7 +97,7 @@ class RegistrationFormCheckerTest {
   @Test
   void checkEmptyEmailForm() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("name", "솔저76");
@@ -113,7 +113,7 @@ class RegistrationFormCheckerTest {
   @Test
   void alreadyExistingId() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("name", "솔저76");
@@ -130,7 +130,7 @@ class RegistrationFormCheckerTest {
   @Test
   void notEqualToPasswordCheck() {
     RegistrationFormChecker registrationFormChecker
-        = new RegistrationFormChecker(accountRepository);
+        = new RegistrationFormChecker(userRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("name", "솔저76");

@@ -1,6 +1,6 @@
 package utils;
 
-import repositories.AccountRepository;
+import repositories.UserRepository;
 
 import java.util.Map;
 
@@ -11,10 +11,10 @@ public class RegistrationFormChecker {
   public static final String NOT_EQUAL_TO_PASSWORD_CHECK = "NOT_EQUAL_TO_PASSWORD_CHECK";
   public static final String ACCEPTED = "ACCEPTED";
 
-  private AccountRepository accountRepository;
+  private UserRepository userRepository;
 
-  public RegistrationFormChecker(AccountRepository accountRepository) {
-    this.accountRepository = accountRepository;
+  public RegistrationFormChecker(UserRepository userRepository) {
+    this.userRepository = userRepository;
   }
 
   public String check(Map<String, String> formData) {
@@ -26,7 +26,7 @@ public class RegistrationFormChecker {
       return RegistrationFormChecker.INSUFFICIENT_REGISTRATION_INPUTS;
     }
 
-    if (accountRepository.findAccount(formData.get("id")) != null) {
+    if (userRepository.findUser(formData.get("id")) != null) {
       return RegistrationFormChecker.ALREADY_EXISTING_ID;
     }
 

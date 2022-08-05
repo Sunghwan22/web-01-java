@@ -1,7 +1,7 @@
 package utils;
 
-import models.Account;
-import repositories.AccountRepository;
+import models.User;
+import repositories.UserRepository;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -10,12 +10,12 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class FileLoader {
-  public AccountRepository loadData(String path) throws FileNotFoundException {
+  public UserRepository loadData(String path) throws FileNotFoundException {
     File file = new File(path);
 
     Scanner scanner = new Scanner(file);
 
-    AccountRepository accountRepository = new AccountRepository();
+    UserRepository userRepository = new UserRepository();
 
     while (scanner.hasNextLine()) {
       String line = scanner.nextLine();
@@ -27,19 +27,19 @@ public class FileLoader {
       String password = formData[2];
       String email = formData[3];
 
-      Account account = new Account(name, id, password, email);
+      User user = new User(name, id, password, email);
 
-      accountRepository.addAccount(account);
+      userRepository.addUser(user);
     }
 
-    return accountRepository;
+    return userRepository;
   }
 
   public void saveData(
-      String path, AccountRepository accountRepository) throws IOException {
+      String path, UserRepository userRepository) throws IOException {
     FileWriter fileWriter = new FileWriter(path);
 
-    accountRepository.accounts().forEach(
+    userRepository.users().forEach(
         (id, account) -> {
           try {
             fileWriter.write(
