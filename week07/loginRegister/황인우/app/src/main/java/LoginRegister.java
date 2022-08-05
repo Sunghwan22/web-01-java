@@ -12,9 +12,9 @@ import java.net.URI;
 import java.util.Map;
 
 public class LoginRegister {
-  private UserRepository userRepository;
+  private final UserRepository userRepository;
 
-  private UserService userService;
+  private final UserService userService;
 
   public static void main(String[] args) throws IOException {
     LoginRegister application = new LoginRegister();
@@ -22,13 +22,13 @@ public class LoginRegister {
   }
 
   public LoginRegister() throws FileNotFoundException {
-    FileLoader fileLoader = new FileLoader();
+    userRepository = new UserRepository();
 
-    userRepository = fileLoader.loadData("data.csv");
+    userRepository.loadData("data.csv");
 
     Runtime.getRuntime().addShutdownHook(new Thread(() -> {
       try {
-        fileLoader.saveData("data.csv", userRepository);
+        userRepository.saveData("data.csv");
       } catch (IOException exception) {
         throw new RuntimeException(exception);
       }

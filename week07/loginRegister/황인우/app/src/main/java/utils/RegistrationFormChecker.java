@@ -7,9 +7,12 @@ import java.util.Map;
 public class RegistrationFormChecker {
   public static final String INSUFFICIENT_REGISTRATION_INPUTS
       = "INSUFFICIENT_REGISTRATION_INPUTS";
-  public static final String ALREADY_EXISTING_ID = "ALREADY_EXISTING_ID";
-  public static final String NOT_EQUAL_TO_PASSWORD_CHECK = "NOT_EQUAL_TO_PASSWORD_CHECK";
-  public static final String ACCEPTED = "ACCEPTED";
+  public static final String ALREADY_EXISTING_ID
+      = "ALREADY_EXISTING_ID";
+  public static final String NOT_EQUAL_TO_PASSWORD_CHECK
+      = "NOT_EQUAL_TO_PASSWORD_CHECK";
+  public static final String ACCEPTED
+      = "ACCEPTED";
 
   private UserRepository userRepository;
 
