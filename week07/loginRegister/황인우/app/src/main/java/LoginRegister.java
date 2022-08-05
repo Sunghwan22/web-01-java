@@ -1,5 +1,4 @@
 import models.Account;
-import pages.RegistrationFailPageGenerator;
 import com.sun.net.httpserver.HttpServer;
 import pages.*;
 import repositories.AccountRepository;
@@ -96,7 +95,7 @@ public class LoginRegister {
       return new RegistrationSuccessPageGenerator();
     }
 
-    return new RegistrationFailPageGenerator(status);
+    return new FailPageGenerator(status);
   }
 
   public PageGenerator processLogin(String method, Map<String, String> formData) {
@@ -112,14 +111,14 @@ public class LoginRegister {
   }
 
   public PageGenerator processLoginPost(Map<String, String> formData) {
-    String status = new AccountValidityChecker(accountRepository).check(formData);
+    String status = new LoginFormChecker(accountRepository).check(formData);
 
-    if (status.equals(AccountValidityChecker.ACCEPTED)) {
+    if (status.equals(LoginFormChecker.ACCEPTED)) {
       Account found = accountRepository.findAccount(formData.get("id"));
 
       return new LoginSuccessPageGenerator(found);
     }
 
-    return new LoginFailPageGenerator(status);
+    return new FailPageGenerator(status);
   }
 }

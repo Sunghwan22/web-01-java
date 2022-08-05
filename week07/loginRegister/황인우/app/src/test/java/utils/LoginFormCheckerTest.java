@@ -10,7 +10,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AccountValidityCheckerTest {
+class LoginFormCheckerTest {
   // 오류 케이스
   // - 모든 데이터를 입력하지 않았을 경우
   // - 사용자 아이디가 존재하지 않을 경우
@@ -31,69 +31,69 @@ class AccountValidityCheckerTest {
 
   @Test
   void checkNormalForm() {
-    AccountValidityChecker accountValidityChecker
-        = new AccountValidityChecker(accountRepository);
+    LoginFormChecker loginFormChecker
+        = new LoginFormChecker(accountRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "hsjkdss228");
     formData.put("password", "dlsdn12");
 
-    String status = accountValidityChecker.check(formData);
+    String status = loginFormChecker.check(formData);
 
-    assertEquals(AccountValidityChecker.ACCEPTED, status);
+    assertEquals(LoginFormChecker.ACCEPTED, status);
   }
 
   @Test
   void checkEmptyIdForm() {
-    AccountValidityChecker accountValidityChecker
-        = new AccountValidityChecker(accountRepository);
+    LoginFormChecker loginFormChecker
+        = new LoginFormChecker(accountRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("password", "dlsdn12");
 
-    String status = accountValidityChecker.check(formData);
+    String status = loginFormChecker.check(formData);
 
-    assertEquals(AccountValidityChecker.INSUFFICIENT, status);
+    assertEquals(LoginFormChecker.INSUFFICIENT_LOGIN_INPUTS, status);
   }
 
   @Test
   void checkEmptyPasswordForm() {
-    AccountValidityChecker accountValidityChecker
-        = new AccountValidityChecker(accountRepository);
+    LoginFormChecker loginFormChecker
+        = new LoginFormChecker(accountRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "hsjkdss228");
 
-    String status = accountValidityChecker.check(formData);
+    String status = loginFormChecker.check(formData);
 
-    assertEquals(AccountValidityChecker.INSUFFICIENT, status);
+    assertEquals(LoginFormChecker.INSUFFICIENT_LOGIN_INPUTS, status);
   }
 
   @Test
   void notExistingId() {
-    AccountValidityChecker accountValidityChecker
-        = new AccountValidityChecker(accountRepository);
+    LoginFormChecker loginFormChecker
+        = new LoginFormChecker(accountRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "chikorita");
     formData.put("password", "dlsdn12");
 
-    String status = accountValidityChecker.check(formData);
+    String status = loginFormChecker.check(formData);
 
-    assertEquals(AccountValidityChecker.NOT_EXISTING_ID, status);
+    assertEquals(LoginFormChecker.NOT_EXISTING_ID, status);
   }
 
   @Test
   void incorrectPassword() {
-    AccountValidityChecker accountValidityChecker
-        = new AccountValidityChecker(accountRepository);
+    LoginFormChecker loginFormChecker
+        = new LoginFormChecker(accountRepository);
 
     Map<String, String> formData = new HashMap<>();
     formData.put("id", "hsjkdss228");
     formData.put("password", "hwaseonggazua");
 
-    String status = accountValidityChecker.check(formData);
+    String status = loginFormChecker.check(formData);
 
-    assertEquals(AccountValidityChecker.INCORRECT_PASSWORD, status);
+    assertEquals(LoginFormChecker.INCORRECT_PASSWORD, status);
   }
 }

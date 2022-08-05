@@ -59,7 +59,7 @@ class RegistrationFormCheckerTest {
 
     String status = registrationFormChecker.check(formData);
 
-    assertEquals(RegistrationFormChecker.INSUFFICIENT, status);
+    assertEquals(RegistrationFormChecker.INSUFFICIENT_REGISTRATION_INPUTS, status);
   }
 
   @Test
@@ -75,7 +75,7 @@ class RegistrationFormCheckerTest {
 
     String status = registrationFormChecker.check(formData);
 
-    assertEquals(RegistrationFormChecker.INSUFFICIENT, status);
+    assertEquals(RegistrationFormChecker.INSUFFICIENT_REGISTRATION_INPUTS, status);
   }
 
   @Test
@@ -91,7 +91,7 @@ class RegistrationFormCheckerTest {
 
     String status = registrationFormChecker.check(formData);
 
-    assertEquals(RegistrationFormChecker.INSUFFICIENT, status);
+    assertEquals(RegistrationFormChecker.INSUFFICIENT_REGISTRATION_INPUTS, status);
   }
 
   @Test
@@ -107,7 +107,7 @@ class RegistrationFormCheckerTest {
 
     String status = registrationFormChecker.check(formData);
 
-    assertEquals(RegistrationFormChecker.INSUFFICIENT, status);
+    assertEquals(RegistrationFormChecker.INSUFFICIENT_REGISTRATION_INPUTS, status);
   }
 
   @Test
