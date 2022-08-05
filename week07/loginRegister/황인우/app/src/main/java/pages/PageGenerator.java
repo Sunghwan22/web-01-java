@@ -22,7 +22,7 @@ public abstract class PageGenerator {
         "border: 1px solid black;\n" +
         "border-radius: 5px;\n" +
         "}\n" +
-        "label {\n" +
+        "input {\n" +
         "display: block;\n" +
         "}\n" +
         ".notification {\n" +

@@ -15,19 +15,19 @@ class RegistrationPageGeneratorTest {
         content.contains("<h2>회원가입</h2>"),
         "회원가입 제목 오류\n" + content);
     assertTrue(
-        content.contains("이름 </label>"),
+        content.contains("이름"),
         "이름 메세지 및 입력란 오류\n" + content);
     assertTrue(
-        content.contains("아이디 </label>"),
+        content.contains("아이디"),
         "아이디 메세지 및 입력란 오류\n" + content);
     assertTrue(
-        content.contains("비밀번호 </label>"),
+        content.contains("비밀번호"),
         "비밀번호 메세지 및 입력란 오류\n" + content);
     assertTrue(
-        content.contains("비밀번호 재확인 </label>"),
+        content.contains("비밀번호 재확인"),
         "비밀번호 재확인 메세지 및 입력란 오류\n" + content);
     assertTrue(
-        content.contains("이메일 </label>"),
+        content.contains("이메일"),
         "이메일 메세지 및 입력란 오류\n" + content);
     assertTrue(
         content.contains("<button type=\"submit\">회원가입"),
