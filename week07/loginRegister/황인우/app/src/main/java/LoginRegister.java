@@ -2,7 +2,7 @@ import models.User;
 import com.sun.net.httpserver.HttpServer;
 import pages.*;
 import repositories.UserRepository;
-import services.FormCheckService;
+import services.UserService;
 import utils.*;
 
 import java.io.FileNotFoundException;
@@ -14,7 +14,7 @@ import java.util.Map;
 public class LoginRegister {
   private UserRepository userRepository;
 
-  private FormCheckService formCheckService;
+  private UserService userService;
 
   public static void main(String[] args) throws IOException {
     LoginRegister application = new LoginRegister();
@@ -34,7 +34,7 @@ public class LoginRegister {
       }
     }));
 
-    formCheckService = new FormCheckService(userRepository);
+    userService = new UserService(userRepository);
   }
 
   public void run() throws IOException {
@@ -87,7 +87,7 @@ public class LoginRegister {
   }
 
   public PageGenerator processRegistrationPost(Map<String, String> formData) {
-    String status = formCheckService.checkRegistrationForm(formData);
+    String status = userService.checkRegistrationForm(formData);
 
     if (status.equals(RegistrationFormChecker.ACCEPTED)) {
       userRepository.addUser(
@@ -116,7 +116,7 @@ public class LoginRegister {
   }
 
   public PageGenerator processLoginPost(Map<String, String> formData) {
-    String status = new LoginFormChecker(userRepository).check(formData);
+    String status = userService.checkLoginForm(formData);
 
     if (status.equals(LoginFormChecker.ACCEPTED)) {
       User found = userRepository.findUser(formData.get("id"));
