@@ -1,6 +1,7 @@
 package pages;
 
 import org.junit.jupiter.api.Test;
+import services.LoginService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

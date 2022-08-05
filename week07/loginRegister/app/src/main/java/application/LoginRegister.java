@@ -1,21 +1,17 @@
 package application;
 
 import com.sun.net.httpserver.HttpServer;
-import models.Account;
-import pages.DuplicateIdPageGenerator;
+import models.User;
+import pages.FailPageGenerator;
 import pages.GreetingPageGenerator;
-import pages.IdNotFoundPageGenerator;
 import pages.LoginPageGenerator;
 import pages.LoginSuccessPageGenerator;
-import pages.NotEnteredInformationPageGenerator;
-import pages.NotEnteredLoginForm;
 import pages.PageGenerator;
-import pages.PasswordNotEqualsPageGenerator;
 import pages.RegisterPageGenerator;
 import pages.SuccessRegisterPageGenerator;
-import pages.WrongPasswordPageGenerator;
-import repositories.AccountRepository;
-import utils.AccountLoader;
+import repositories.UserRepository;
+import services.LoginService;
+import services.RegisterService;
 import utils.FormParser;
 import utils.MessageWriter;
 import utils.RequestBodyReader;
@@ -27,9 +23,7 @@ import java.net.URI;
 import java.util.Map;
 
 public class LoginRegister {
-
-  private final AccountRepository accountRepository;
-  private final AccountLoader accountLoader;
+  private final UserRepository userRepository;
   private final FormParser formParser;
 
   public static void main(String[] args) throws IOException {
@@ -38,11 +32,9 @@ public class LoginRegister {
   }
 
   public LoginRegister() throws FileNotFoundException {
-    accountRepository = new AccountRepository();
+    userRepository = new UserRepository();
 
     formParser = new FormParser();
-
-    accountLoader = new AccountLoader();
   }
 
   private void run() throws IOException {
@@ -56,14 +48,11 @@ public class LoginRegister {
 
       String method = exchange.getRequestMethod();
 
-      RequestBodyReader requestBodyReader = new RequestBodyReader(exchange);
-      String requestBody = requestBodyReader.body();
+      String requestBody = new RequestBodyReader(exchange).body();
 
       Map<String, String> formData = formParser.parse(requestBody);
 
-      PageGenerator pageGenerator = process(path, method, formData);
-
-      String content = pageGenerator.html();
+      String content = process(path, method, formData).html();
 
       MessageWriter messageWriter = new MessageWriter(exchange);
       messageWriter.write(content);
@@ -77,7 +66,7 @@ public class LoginRegister {
                                 Map<String, String> formData) throws IOException {
     return switch (path) {
       case "/login" -> processLogin(method, formData);
-      case "/registration" -> processRegistraion(method, formData);
+      case "/registration" -> processRegistration(method, formData);
       default -> new GreetingPageGenerator();
     };
   }
@@ -94,83 +83,47 @@ public class LoginRegister {
   }
 
   private PageGenerator processLoginPost(Map<String, String> formData) {
-    Account account = accountRepository.find(formData.get("id"));
+    String status = new LoginService(userRepository).LoginFormCheck(formData);
 
-    if (isaBlankLoginForm(formData)) {
-      return new NotEnteredLoginForm();
+    if(status.equals(LoginService.SUCCESS)) {
+      User findUser = userRepository.find(formData.get("id"));
+
+      String name = findUser.name();
+
+      return new LoginSuccessPageGenerator(name);
     }
 
-    if (account == null) {
-      return new IdNotFoundPageGenerator();
-    }
-
-    if (isConfirmPassword(formData, account)) {
-      return new WrongPasswordPageGenerator();
-    }
-    String name = account.name();
-    return new LoginSuccessPageGenerator(name);
+    return new FailPageGenerator(status);
   }
 
-  private boolean isaBlankLoginForm(Map<String, String> formData) {
-    return formData.get("id") == null ||
-        formData.get("password") == null;
-  }
-
-  private boolean isConfirmPassword(Map<String, String> formData, Account account) {
-    return !account.password().equals(formData.get("password"));
-  }
-
-  private PageGenerator processRegistraion(String method, Map<String, String> formData) throws IOException {
+  private PageGenerator processRegistration(String method, Map<String, String> formData) throws IOException {
     if (method.equals("GET")) {
-      return processRegistraionGet();
+      return processRegistrationGet();
     }
 
-    return processRegistraionPost(formData);
+    return processRegistrationPost(formData);
   }
 
-  private RegisterPageGenerator processRegistraionGet() {
+  private RegisterPageGenerator processRegistrationGet() {
     return new RegisterPageGenerator();
   }
 
-  private PageGenerator processRegistraionPost(Map<String, String> formData) throws IOException {
-    if (isaBlankInformation(formData)) {
-      return new NotEnteredInformationPageGenerator();
+  private PageGenerator processRegistrationPost(Map<String, String> formData) throws IOException {
+    String status = new RegisterService(userRepository).registrationFormCheck(formData);
+
+    if (status.equals("PASSED")) {
+      User user = new User(
+          formData.get("name"),
+          formData.get("id"),
+          formData.get("password"),
+          formData.get("email"));
+
+      userRepository.users().put(user.id(), user);
+
+      userRepository.write(userRepository.users());
+
+      return new SuccessRegisterPageGenerator();
     }
-
-    if (isPasswordcheck(formData)) {
-      return new PasswordNotEqualsPageGenerator();
-    }
-
-    if (isDuplicatedId(formData)) {
-      return new DuplicateIdPageGenerator();
-    }
-
-    Account account = new Account(
-        formData.get("name"),
-        formData.get("id"),
-        formData.get("password"),
-        formData.get("email"));
-
-    accountRepository.accounts().put(account.id(), account);
-
-    accountLoader.write(accountRepository.accounts());
-
-    return new SuccessRegisterPageGenerator();
-  }
-
-  private boolean isaBlankInformation(Map<String, String> formData) {
-    return formData.get("name") == null ||
-        formData.get("id") == null ||
-        formData.get("password") == null ||
-        formData.get("password-check") == null ||
-        formData.get("email") == null;
-  }
-
-  private boolean isPasswordcheck(Map<String, String> formData) {
-    return !formData.get("password").equals(formData.get("password-check"));
-  }
-
-  private boolean isDuplicatedId(Map<String, String> formData) {
-    return !(accountRepository.find(formData.get("id")) == null);
+    return new FailPageGenerator(status);
   }
 }
