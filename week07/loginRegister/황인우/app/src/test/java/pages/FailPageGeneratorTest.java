@@ -8,6 +8,32 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class FailPageGeneratorTest {
   @Test
+  void loginLinkInInsufficient() {
+    PageGenerator pageGenerator1
+        = new FailPageGenerator(
+        LoginFormChecker.INSUFFICIENT_LOGIN_INPUTS);
+
+    String content = pageGenerator1.content();
+
+    assertTrue(
+        content.contains("login"),
+        "입력 정보 부족 오류 시 되돌아가기 링크 오류\n" + content);
+  }
+
+  @Test
+  void registerLinkInInsufficient() {
+    PageGenerator pageGenerator1
+        = new FailPageGenerator(
+        RegistrationFormChecker.INSUFFICIENT_REGISTRATION_INPUTS);
+
+    String content = pageGenerator1.content();
+
+    assertTrue(
+        content.contains("register"),
+        "입력 정보 부족 오류 시 되돌아가기 링크 오류\n" + content);
+  }
+
+  @Test
   void insufficientLoginInputs() {
     PageGenerator pageGenerator
         = new FailPageGenerator(

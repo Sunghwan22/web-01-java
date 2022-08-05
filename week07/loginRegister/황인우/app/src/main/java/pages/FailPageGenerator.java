@@ -29,7 +29,13 @@ public class FailPageGenerator extends PageGenerator {
 
   public String insufficient() {
     return "<p class=\"notification\">입력되지 않은 정보가 있습니다. 다시 확인해주세요.</p>\n" +
-        "<a href=\"login\">되돌아가기</a>\n";
+        "<a href=\"" + link() + "\">되돌아가기</a>\n";
+  }
+
+  public String link() {
+    return status.equals(LoginFormChecker.INSUFFICIENT_LOGIN_INPUTS)
+        ? "login"
+        : "register";
   }
 
   public String notExistingId() {
