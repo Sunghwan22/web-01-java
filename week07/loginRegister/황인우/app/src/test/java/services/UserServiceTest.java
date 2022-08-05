@@ -176,7 +176,7 @@ class UserServiceTest {
   }
 
   @Test
-  void notExistingId() {
+  void withoutExistingId() {
     LoginFormChecker loginFormChecker
         = new LoginFormChecker(userRepository);
 
