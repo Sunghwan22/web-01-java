@@ -12,7 +12,8 @@ import java.util.Scanner;
 
 public class FileLoader {
 
-  public List<Task> loadTasks(String path) throws FileNotFoundException {
+  public List<Task> loadTasks(String path, IdentifierManager identifierManager)
+      throws FileNotFoundException {
     File file = new File(path);
 
     Scanner scanner = new Scanner(file);
@@ -20,10 +21,17 @@ public class FileLoader {
     List<Task> tasks = new ArrayList<>();
 
     while (scanner.hasNextLine()) {
-      String content = scanner.nextLine();
+      String line = scanner.nextLine();
 
-      tasks.add(new Task(content));
+      String[] split = line.split(",");
+
+      int identifier = Integer.parseInt(split[0]);
+      String content = split[1];
+
+      tasks.add(new Task(identifier, content));
     }
+
+    identifierManager.setInitialIdentifierCount(tasks.size());
 
     return tasks;
   }
@@ -32,7 +40,7 @@ public class FileLoader {
     FileWriter fileWriter = new FileWriter(path);
 
     for (Task task : tasks) {
-      fileWriter.write(task.content() + "\n");
+      fileWriter.write(task.identifier() + "," + task.content() + "\n");
     }
 
     fileWriter.close();

@@ -10,17 +10,17 @@ class FormParserTest {
   void parse() {
     FormParser formParser = new FormParser();
 
-    Task newlyAddedTask = formParser.parse("task=소고기 사오기");
+    String content = formParser.parse("task=소고기 사오기");
 
-    assertEquals("소고기 사오기", newlyAddedTask.content());
+    assertEquals("소고기 사오기", content);
   }
 
   @Test
   void parseWithBlank() {
     FormParser formParser = new FormParser();
 
-    Task newlyAddedTask = formParser.parse("");
+    String content = formParser.parse("");
 
-    assertNull(newlyAddedTask);
+    assertEquals("", content);
   }
 }

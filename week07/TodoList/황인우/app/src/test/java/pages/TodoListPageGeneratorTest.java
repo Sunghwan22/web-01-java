@@ -21,7 +21,7 @@ class TodoListPageGeneratorTest {
         html.contains("<h1>Todo List</h1>"),
         "웹 페이지에 제목이 없거나 테스트 코드와 다릅니다.\n" + html);
     assertTrue(
-        html.contains("<label>할 일: </label>"),
+        html.contains("<label>할 일: "),
         "웹 페이지에 할 일 label이 없거나 테스트 코드와 다릅니다.\n" + html);
     assertTrue(
         html.contains("<input type=\"text\" name=\"task\" />"),
@@ -34,9 +34,9 @@ class TodoListPageGeneratorTest {
   @Test
   void showTasks() {
     List<Task> tasks = List.of(
-        new Task("할일 1"),
-        new Task("할일 2"),
-        new Task("할일 3")
+        new Task(1, "할일 1"),
+        new Task(2, "할일 2"),
+        new Task(3, "할일 3")
     );
 
     PageGenerator pageGenerator = new TodoListPageGenerator(tasks);
